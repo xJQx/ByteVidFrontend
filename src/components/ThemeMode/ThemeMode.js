@@ -7,9 +7,9 @@ const ThemeMode = () => {
         var lightModeSwitch = document.querySelector('#headlessui-switch-12-lightmode');
         var darkModeSwitch = document.querySelector('#headlessui-switch-12-darkmode');
 
-        // by default is in light mode
-        darkModeSwitch.classList.add('hidden');
-        htmlObject.classList.remove('dark');
+        // by default is in dark mode
+        lightModeSwitch.classList.add('hidden');
+        htmlObject.classList.add('dark');
 
         // toggle to dark mode
         lightModeSwitch.addEventListener('click', () => {
