@@ -25,7 +25,7 @@ const ThemeMode = () => {
             darkModeSwitch.classList.add('hidden');
             lightModeSwitch.classList.remove('hidden');
         });
-    }, []);
+    });
 
 
     return(

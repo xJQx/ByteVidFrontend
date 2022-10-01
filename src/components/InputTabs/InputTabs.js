@@ -14,7 +14,7 @@ const InputTabs = () => {
         document.querySelector('#use-uuid-tab-header').addEventListener('click', () => {
             displayInputTab('use-uuid');
         });
-    }, []);
+    });
 
     return (
         <div className="flex justify-center mt-10">
