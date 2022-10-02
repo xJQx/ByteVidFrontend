@@ -13,21 +13,26 @@ const UploadFileTab = ({ handleErrorMessage }) => {
     const handleOnSubmit = async (e) => {
         e.preventDefault();
 
-        if (!sendFormData.has('file')) return handleErrorMessage('Please upload valid video file!');
-        else setSubmitedBool(true);
-
         let videoLanguage = e.target[1].value;
         let translateLanguage = e.target[2].value;
         let server = e.target[3].value;
-
+        
         
         sendFormData.append('type', 'upload');
         sendFormData.append('videoLanguage', videoLanguage);
         sendFormData.append('translateLanguage', translateLanguage);
         sendFormData.append('server', server);
+        
+        let file = sendFormData.get('file');
+        
+        if (!file) return handleErrorMessage('Please upload valid video file!');
+        else if (server === 'cloud' && file.size >= 1000000) return handleErrorMessage('Maximum file size is 100MB!');
+
+        setSubmitedBool(true);
 
         // ----- POST ----- //
         let fetchUrl = (server === 'cloud') ? 'https://ayaka-apps.shn.hk/bytevid/video' : 'http://127.0.0.1:5000/video';
+        console.log(fetchUrl);
         const res = await fetch(fetchUrl, {
             method: 'POST',
             body: sendFormData,
@@ -37,14 +42,8 @@ const UploadFileTab = ({ handleErrorMessage }) => {
         navigate(`result/${uuid}`);
     }
     const handleFileOnChange = (event) => {
-        let file = event.target.files[0];
-
-        if (file.size >= 1000000) {
-            return handleErrorMessage('Maximum file size is 100MB!');
-        }
-
         sendFormData = new FormData();
-        sendFormData.append('file', file);
+        sendFormData.append('file', event.target.files[0]);
     }
 
     return (
