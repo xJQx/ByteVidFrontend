@@ -1,4 +1,5 @@
 import React from 'react';
+import DemoButton from './DemoButton';
 
 import './Header.css';
 
@@ -11,6 +12,7 @@ const Header = () => {
                 <p className="mt-4 mb-4 max-w-2xl text-lg text-gray-500 mx-auto dark:text-gray-300">Say goodbye to long and boring videos! 👋</p>
                 <p className="mt-2 max-w-2xl text-md text-gray-500 mx-auto dark:text-gray-300">By using <mark className="px-2 bg-indigo-700 dark:bg-yellow-500 text-white dark:text-black">state-of-the-art</mark> deep learning technologies, ByteVid converts long, boring videos into fun byte-sized content. </p>
                 <p className="mt-2 max-w-2xl text-md text-gray-500 mx-auto dark:text-gray-300">It can <mark className="px-2 bg-indigo-700 dark:bg-yellow-500 text-white dark:text-black">transcribe</mark>, <mark className="px-2 bg-indigo-700 dark:bg-yellow-500 text-white dark:text-black">translate</mark>, extract <mark className="px-2 bg-indigo-700 dark:bg-yellow-500 text-white dark:text-black">key words</mark>, extract <mark className="px-2 bg-indigo-700 dark:bg-yellow-500 text-white dark:text-black">important slides</mark> from video, and <mark className="px-2 bg-indigo-700 dark:bg-yellow-500 text-white dark:text-black">summarise</mark> the content</p>
+                <DemoButton />
             </div>
         </div>
     )
