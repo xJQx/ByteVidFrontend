@@ -150,10 +150,10 @@ const ContentContainer = ({ tab, resultData }) => {
           resultData.status < 6 ? <Spinner completionStatusId={6} curStatusId={resultData.status} text='Translating... 📖' /> : <TranscriptionContent content={resultData.translated} />
         )}
         {tab === 'keywords' && (
-          resultData.status < 4 ? <Spinner completionStatusId={4} curStatusId={resultData.status} text='Generating keywords...' /> : <Keywords keywords={resultData.keywords} />
+          resultData.status < 3 ? <Spinner completionStatusId={3} curStatusId={resultData.status} text='Generating keywords...' /> : <Keywords keywords={resultData.keywords} />
           )}
         {tab === 'summary' && (
-          resultData.status < 7 ? <Spinner completionStatusId={7} curStatusId={resultData.status} text='Summarising... 🧾' /> : <Summary summaries={resultData.summaries} />
+          resultData.status < 4 ? <Spinner completionStatusId={4} curStatusId={resultData.status} text='Summarising... 🧾' /> : <Summary summaries={resultData.summaries} />
           )}
       </div>
     </div>

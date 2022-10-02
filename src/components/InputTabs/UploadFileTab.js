@@ -32,7 +32,6 @@ const UploadFileTab = ({ handleErrorMessage }) => {
 
         // ----- POST ----- //
         let fetchUrl = (server === 'cloud') ? 'https://ayaka-apps.shn.hk/bytevid/video' : 'http://127.0.0.1:5000/video';
-        console.log(fetchUrl);
         const res = await fetch(fetchUrl, {
             method: 'POST',
             body: sendFormData,
