@@ -22,6 +22,8 @@ const UploadFileTab = ({ handleErrorMessage }) => {
         sendFormData.append('videoLanguage', videoLanguage);
         sendFormData.append('translateLanguage', translateLanguage);
         sendFormData.append('server', server);
+
+        localStorage.setItem('server', server);
         
         let file = sendFormData.get('file');
         

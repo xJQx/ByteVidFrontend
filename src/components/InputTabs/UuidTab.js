@@ -21,6 +21,8 @@ const UuidTab = ({ handleErrorMessage }) => {
         sendFormData.append('uuid', uuid);
         sendFormData.append('server', server);
 
+        localStorage.setItem('server', server);
+
         // check if uuid exist in database
         let fetchUrl = (server === 'cloud') ? `https://ayaka-apps.shn.hk/bytevid/result/${uuid}` : `http://127.0.0.1:5000/result/${uuid}`;
         const res = await fetch(fetchUrl);

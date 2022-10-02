@@ -34,6 +34,8 @@ const YoutubeLinkTab = ({ handleErrorMessage }) => {
         sendFormData.append('translateLanguage', translateLanguage);
         sendFormData.append('server', server);
 
+        localStorage.setItem('server', server);
+
         // ----- POST ----- //        
         let fetchUrl = (server === 'cloud') ? 'https://ayaka-apps.shn.hk/bytevid/video' : 'http://127.0.0.1:5000/video';
         const res = await fetch(fetchUrl, {
