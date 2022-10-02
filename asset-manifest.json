@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/ByteVidFrontend/static/css/main.656c7abf.css",
-    "main.js": "/ByteVidFrontend/static/js/main.12dcc984.js",
+    "main.js": "/ByteVidFrontend/static/js/main.5d6fd802.js",
     "index.html": "/ByteVidFrontend/index.html",
     "main.656c7abf.css.map": "/ByteVidFrontend/static/css/main.656c7abf.css.map",
-    "main.12dcc984.js.map": "/ByteVidFrontend/static/js/main.12dcc984.js.map"
+    "main.5d6fd802.js.map": "/ByteVidFrontend/static/js/main.5d6fd802.js.map"
   },
   "entrypoints": [
     "static/css/main.656c7abf.css",
-    "static/js/main.12dcc984.js"
+    "static/js/main.5d6fd802.js"
   ]
 }
