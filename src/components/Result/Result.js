@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import Alert from '../Alert/Alert';
 import { isValidUuid } from '../InputTabs/UuidTab';
 import Spinner from '../Spinner/Spinner';
 
@@ -8,6 +9,12 @@ const STATUS_DONE = 200;
 const Result = () => {
   const { uuid } = useParams();
   const navigate = useNavigate();
+
+  const [errorMessage, setErrorMessage] = useState('');
+  const handleErrorMessage = (message) => {
+      setErrorMessage(message);
+  }
+
   let [resultData, setResultData] = useState({status: 0});
   useEffect(() => {
     // invalid uuid -> navigate back to homepage
@@ -17,17 +24,21 @@ const Result = () => {
     }
 
     // get results (every sec)
-    if (resultData?.status === STATUS_DONE) return;
-
     const getReqTimeout = setTimeout(() => {
       fetch(`http://127.0.0.1:5000/result/${uuid}`, {
         method: 'GET'
       })
         .then(res => res.json())
         .then(data => {
+          // Error from server
+          if (data.status === -2) {
+            clearTimeout(getReqTimeout);
+            return setErrorMessage(data.error_message);
+          }
+
+          // setResultData
           setResultData(resultData => ({...resultData, ...data}));
         });
-      console.log(resultData);
     }, 1000);
 
     // if done, stop making GET requests
@@ -40,18 +51,23 @@ const Result = () => {
   const [tab, setTab] = useState('transcription');
 
   return (
-    <div className='flex justify-center mt-10'>
-      {resultData.status < 2 ? 
-        <div className='scale-150 p-10'>
-          <Spinner completionStatusId={2} curStatusId={resultData.status} text='We are working hard on your video... 🏃🏻‍♀️🏃🏻‍♂️' />
-        </div>
-        : (
-        <div className='max-w-2xl w-full bg-white rounded-t-lg border shadow-md dark:bg-gray-800 dark:border-gray-700 overflow-hidden'>
-          <TabContainer currTab={tab} setTab={setTab} />
-          <ContentContainer tab={tab} resultData={resultData} />
-        </div>
-      )}
-    </div>
+    <>
+      <div className='flex justify-center mt-10'>
+        {resultData.status < 2 ? 
+          <div className='scale-150 p-10'>
+            <Spinner completionStatusId={2} curStatusId={resultData.status} text='We are working hard on your video... 🏃🏻‍♀️🏃🏻‍♂️' />
+          </div>
+          : (
+          <div className='max-w-2xl w-full bg-white rounded-t-lg border shadow-md dark:bg-gray-800 dark:border-gray-700 overflow-hidden'>
+            <TabContainer currTab={tab} setTab={setTab} />
+            <ContentContainer tab={tab} resultData={resultData} />
+          </div>
+        )}
+      </div>
+      <div className="flex justify-center mt-10">
+        <Alert color='rose' message={errorMessage} handleErrorMessage={handleErrorMessage} />
+      </div>
+    </>
   );
 };
 
@@ -165,29 +181,17 @@ const Keywords = ({ keywords }) => {
 };
 
 const Summary = ({ summaries }) => {
-  const reader = new FileReader();
-  // let base64String;
-  // reader.addEventListener('load', () => {
-  //   base64String = reader.result;
-  // })
-  
-  return (summaries.map((s, index) => {
-    if (s.image) {
-      
-      // reader.readAsDataURL(s.image);
-    }
+  const { uuid } = useParams();
 
+  return (summaries.map((s, index) => {
     return (
       <div key={index}>
-        {/* <img src={base64String} alt={index}></img> */}
+        {s?.image ? <img src={`http://127.0.0.1:5000/static/${uuid}/${s.image}`} alt={s.text}></img> : <></>}
         <div>{s.text}</div>
-        <br />
-        <hr />
-        <br />
+        <br/>
       </div>
     )
   }));
-
 };
 
 

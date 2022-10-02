@@ -1,11 +1,11 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import DatabaseType from './DatabaseType';
-import LanguageInput from './LanguageInput';
+import LanguageVideo from './LanguageVideo';
 import LanguageTranslated from './LanguageTranslated';
 import Spinner from '../Spinner/Spinner'
 
-const UploadFileTab = () => {
+const UploadFileTab = ({ handleErrorMessage }) => {
     const navigate = useNavigate();
     let sendFormData = new FormData();
     let [submitedBool, setSubmitedBool] = useState(false);
@@ -13,7 +13,7 @@ const UploadFileTab = () => {
     const handleOnSubmit = async (e) => {
         e.preventDefault();
 
-        if (!sendFormData.has('file')) return alert('Please upload video file!');
+        if (!sendFormData.has('file')) return handleErrorMessage('Please upload video file!');
         else setSubmitedBool(true);
 
         let videoLanguage = e.target[1].value;
@@ -52,7 +52,7 @@ const UploadFileTab = () => {
 
                 
                 {/* language */}
-                <LanguageInput />
+                <LanguageVideo />
 
                 {/* Translation */}
                 <LanguageTranslated />

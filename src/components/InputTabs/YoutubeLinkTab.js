@@ -1,11 +1,11 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import DatabaseType from './DatabaseType';
-import LanguageInput from './LanguageInput';
+import LanguageVideo from './LanguageVideo';
 import LanguageTranslated from './LanguageTranslated';
 import Spinner from '../Spinner/Spinner';
 
-const YoutubeLinkTab = () => {
+const YoutubeLinkTab = ({ handleErrorMessage }) => {
     const navigate = useNavigate();
     let [submitedBool, setSubmitedBool] = useState(false);
 
@@ -24,7 +24,7 @@ const YoutubeLinkTab = () => {
         let translateLanguage = e.target[2].value;
         let server = e.target[3].value;
         
-        if (!isValidYoutubeUrl(youtubeUrl)) return alert('Invalid YouTube url!');
+        if (!isValidYoutubeUrl(youtubeUrl)) return handleErrorMessage('Invalid YouTube url!');
         else setSubmitedBool(true);
 
         let sendFormData = new FormData();
@@ -55,7 +55,7 @@ const YoutubeLinkTab = () => {
                 </div>
                 
                 {/* language */}
-                <LanguageInput />
+                <LanguageVideo />
             
                 {/* Translation */}
                 <LanguageTranslated />

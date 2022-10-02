@@ -5,7 +5,7 @@ const isValidUuid = (s) => {
     return s.match("^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$");
 }
 
-const UuidTab = () => {
+const UuidTab = ({ handleErrorMessage }) => {
     const navigate = useNavigate();
 
     const handleOnSubmit = async (e) => {
@@ -13,7 +13,7 @@ const UuidTab = () => {
 
         let uuid = e.target[0].value;
 
-        if (!isValidUuid(uuid)) return alert('Invalid uuid!');
+        if (!isValidUuid(uuid)) return handleErrorMessage('Invalid uuid!');
 
         let sendFormData = new FormData();
         sendFormData.append('uuid', uuid);
@@ -22,7 +22,8 @@ const UuidTab = () => {
         const res = await fetch(`http://127.0.0.1:5000/result/${uuid}`);
         const data = await res.json();
 
-        if (data.status === -1) return alert('Uuid does not exist in database!');
+        if (data.status === -1) return handleErrorMessage('Uuid does not exist in database!');
+        else if (data.status === -2) return handleErrorMessage(data.error_message);
 
         // navigate to page
         navigate(`result/${uuid}`);
