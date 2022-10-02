@@ -24,8 +24,10 @@ const Result = () => {
     }
 
     // get results (every sec)
+    const server = localStorage.getItem('server');
+    let fetchUrl = (server === 'cloud') ? `https://ayaka-apps.shn.hk/bytevid/result/${uuid}`: `http://127.0.0.1:5000/result/${uuid}`;
     const getReqTimeout = setTimeout(() => {
-      fetch(`https://ayaka-apps.shn.hk/bytevid/result/${uuid}`, {
+      fetch(fetchUrl, {
         method: 'GET'
       })
         .then(res => res.json())
