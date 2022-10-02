@@ -28,7 +28,7 @@ const UploadFileTab = ({ handleErrorMessage }) => {
         let file = sendFormData.get('file');
         
         if (!file) return handleErrorMessage('Please upload valid video file!');
-        else if (server === 'cloud' && file.size >= 1000000) return handleErrorMessage('Maximum file size is 100MB!');
+        else if (server === 'cloud' && file.size >= 100000000) return handleErrorMessage('Maximum file size is 100MB!');
 
         setSubmitedBool(true);
 
