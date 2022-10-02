@@ -1,8 +1,9 @@
 import React from 'react'
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const DemoButton = () => {
     const navigate = useNavigate();
+    const location = useLocation();
 
     const handleOnSubmit = async (e) => {
         e.preventDefault();
@@ -13,8 +14,13 @@ const DemoButton = () => {
         if (data.status === -1) return alert('Uuid does not exist in database!');
         else if (data.status === 500) return alert('Process failed.');
 
-        // navigate to page
-        navigate(`result/85bbf493-58a9-40cd-8bf6-e71e28071d8f`);
+        localStorage.setItem('server', 'cloud');
+
+        // // navigate to page
+        if (location.pathname.startsWith('/result/') && location.pathname !== `/result/85bbf493-58a9-40cd-8bf6-e71e28071d8f`) {
+            navigate(`result/85bbf493-58a9-40cd-8bf6-e71e28071d8f`);
+            navigate(0); // refresh page to re-render
+        } else navigate(`result/85bbf493-58a9-40cd-8bf6-e71e28071d8f`);
     }
 
     return (
