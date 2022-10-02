@@ -13,7 +13,7 @@ const UploadFileTab = ({ handleErrorMessage }) => {
     const handleOnSubmit = async (e) => {
         e.preventDefault();
 
-        if (!sendFormData.has('file')) return handleErrorMessage('Please upload video file!');
+        if (!sendFormData.has('file')) return handleErrorMessage('Please upload valid video file!');
         else setSubmitedBool(true);
 
         let videoLanguage = e.target[1].value;
@@ -27,7 +27,8 @@ const UploadFileTab = ({ handleErrorMessage }) => {
         sendFormData.append('server', server);
 
         // ----- POST ----- //
-        const res = await fetch('http://127.0.0.1:5000/video', {
+        let fetchUrl = (server === 'cloud') ? 'https://ayaka-apps.shn.hk/bytevid/video' : 'http://127.0.0.1:5000/video';
+        const res = await fetch(fetchUrl, {
             method: 'POST',
             body: sendFormData,
         }); 
@@ -36,8 +37,14 @@ const UploadFileTab = ({ handleErrorMessage }) => {
         navigate(`result/${uuid}`);
     }
     const handleFileOnChange = (event) => {
+        let file = event.target.files[0];
+
+        if (file.size >= 1000000) {
+            return handleErrorMessage('Maximum file size is 100MB!');
+        }
+
         sendFormData = new FormData();
-        sendFormData.append('file', event.target.files[0]);
+        sendFormData.append('file', file);
     }
 
     return (
@@ -61,10 +68,10 @@ const UploadFileTab = ({ handleErrorMessage }) => {
                 <DatabaseType />
                 {submitedBool ?
                     <>
-                        <button disabled type="submit" className="w-full text-white bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-yellow-600 dark:focus:ring-yellow-700">Extracting...</button>
+                        <button disabled type="submit" className="w-full text-white bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-yellow-600 dark:focus:ring-yellow-700">Uploading...</button>
                         <Spinner completionStatusId={1} curStatusId={0} text='We are working hard on your video... 🏃🏻‍♀️🏃🏻‍♂️' />
                     </>
-                    : <button type="submit" className="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-yellow-500 dark:hover:bg-yellow-600 dark:focus:ring-yellow-700">Extract</button>
+                    : <button type="submit" className="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-yellow-500 dark:hover:bg-yellow-600 dark:focus:ring-yellow-700">Upload</button>
                 }
             </form>
         </div>

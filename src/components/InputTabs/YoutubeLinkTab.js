@@ -35,7 +35,7 @@ const YoutubeLinkTab = ({ handleErrorMessage }) => {
         sendFormData.append('server', server);
 
         // ----- POST ----- //
-        const res = await fetch('http://127.0.0.1:5000/video', {
+        const res = await fetch('https://ayaka-apps.shn.hk/bytevid/video', {
             method: 'POST',
             body: sendFormData,
         });
@@ -65,10 +65,10 @@ const YoutubeLinkTab = ({ handleErrorMessage }) => {
 
                 {submitedBool ?
                     <>
-                        <button disabled type="submit" className="w-full text-white bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-yellow-600 dark:focus:ring-yellow-700">Extracting...</button>
+                        <button disabled type="submit" className="w-full text-white bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-yellow-600 dark:focus:ring-yellow-700">Uploading...</button>
                         <Spinner completionStatusId={1} curStatusId={0} text='We are working hard on your video... 🏃🏻‍♀️🏃🏻‍♂️' />
                     </>
-                    : <button type="submit" className="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-yellow-500 dark:hover:bg-yellow-600 dark:focus:ring-yellow-700">Extract</button>
+                    : <button type="submit" className="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-yellow-500 dark:hover:bg-yellow-600 dark:focus:ring-yellow-700">Upload</button>
                 }
             </form>
         </div>

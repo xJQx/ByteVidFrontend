@@ -19,11 +19,11 @@ const UuidTab = ({ handleErrorMessage }) => {
         sendFormData.append('uuid', uuid);
 
         // check if uuid exist in database
-        const res = await fetch(`http://127.0.0.1:5000/result/${uuid}`);
+        const res = await fetch(`https://ayaka-apps.shn.hk/bytevid/result/${uuid}`);
         const data = await res.json();
 
         if (data.status === -1) return handleErrorMessage('Uuid does not exist in database!');
-        else if (data.status === -2) return handleErrorMessage(data.error_message);
+        else if (data.status === 500) return handleErrorMessage('Process failed.');
 
         // navigate to page
         navigate(`result/${uuid}`);

@@ -25,24 +25,23 @@ const Result = () => {
 
     // get results (every sec)
     const getReqTimeout = setTimeout(() => {
-      fetch(`http://127.0.0.1:5000/result/${uuid}`, {
+      fetch(`https://ayaka-apps.shn.hk/bytevid/result/${uuid}`, {
         method: 'GET'
       })
         .then(res => res.json())
         .then(data => {
-          // Error from server
-          if (data.status === -2) {
-            clearTimeout(getReqTimeout);
-            return setErrorMessage(data.error_message);
-          }
-
           // setResultData
           setResultData(resultData => ({...resultData, ...data}));
         });
-    }, 1000);
+      }, 1000);
 
     // if done, stop making GET requests
     if (resultData?.status === STATUS_DONE) clearTimeout(getReqTimeout);
+    // Error from server
+    if (resultData?.status === 500) {
+      clearTimeout(getReqTimeout);
+      return setErrorMessage('Process failed.');
+    }
     
   }, [uuid, navigate, resultData]);
   
@@ -53,20 +52,23 @@ const Result = () => {
   return (
     <>
       <div className='flex justify-center mt-10'>
-        {resultData.status < 2 ? 
-          <div className='scale-150 p-10'>
-            <Spinner completionStatusId={2} curStatusId={resultData.status} text='We are working hard on your video... 🏃🏻‍♀️🏃🏻‍♂️' />
-          </div>
-          : (
-          <div className='max-w-2xl w-full bg-white rounded-t-lg border shadow-md dark:bg-gray-800 dark:border-gray-700 overflow-hidden'>
-            <TabContainer currTab={tab} setTab={setTab} />
-            <ContentContainer tab={tab} resultData={resultData} />
-          </div>
-        )}
+        {resultData.status == 500 ? 
+          <div className="flex justify-center mt-10">
+            <Alert color='rose' message={errorMessage} handleErrorMessage={handleErrorMessage} />
+          </div> : 
+          (resultData.status < 2 ? 
+            <div className='scale-150 p-10'>
+              <Spinner completionStatusId={2} curStatusId={resultData.status} text='We are working hard on your video... 🏃🏻‍♀️🏃🏻‍♂️' />
+            </div>
+            : (
+            <div className='max-w-2xl w-full bg-white rounded-t-lg border shadow-md dark:bg-gray-800 dark:border-gray-700 overflow-hidden'>
+              <TabContainer currTab={tab} setTab={setTab} />
+              <ContentContainer tab={tab} resultData={resultData} />
+            </div>
+          ))
+        }
       </div>
-      <div className="flex justify-center mt-10">
-        <Alert color='rose' message={errorMessage} handleErrorMessage={handleErrorMessage} />
-      </div>
+      
     </>
   );
 };
@@ -161,7 +163,7 @@ const ContentContainer = ({ tab, resultData }) => {
 const TranscriptionDisplay = () => {};
 
 const TranscriptionContent = ({ content }) => {
-  return content.split('\n').map((text) => (
+  return content?.split('\n').map((text) => (
     <div key={Math.random()} className='mb-2'>
       {text}
     </div>
@@ -171,7 +173,7 @@ const TranscriptionContent = ({ content }) => {
 const Keywords = ({ keywords }) => {
   return (
     <div className='md:text-3xl text-xl text-center'>
-      {keywords.map((keyword) => (
+      {keywords?.map((keyword) => (
         <div key={keyword} className='mb-3'>
           {keyword}
         </div>
@@ -183,10 +185,10 @@ const Keywords = ({ keywords }) => {
 const Summary = ({ summaries }) => {
   const { uuid } = useParams();
 
-  return (summaries.map((s, index) => {
+  return (summaries?.map((s, index) => {
     return (
       <div key={index}>
-        {s?.image ? <img src={`http://127.0.0.1:5000/static/${uuid}/${s.image}`} alt={s.text}></img> : <></>}
+        {s?.image ? <img src={`https://ayaka-apps.shn.hk/bytevid/static/${uuid}/${s.image}`} alt={s.text}></img> : <></>}
         <div>{s.text}</div>
         <br/>
       </div>
