@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/ByteVidFrontend/static/css/main.656c7abf.css",
+    "main.js": "/ByteVidFrontend/static/js/main.d21f67f3.js",
+    "index.html": "/ByteVidFrontend/index.html",
+    "main.656c7abf.css.map": "/ByteVidFrontend/static/css/main.656c7abf.css.map",
+    "main.d21f67f3.js.map": "/ByteVidFrontend/static/js/main.d21f67f3.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.656c7abf.css",
+    "static/js/main.d21f67f3.js"
+  ]
+}
