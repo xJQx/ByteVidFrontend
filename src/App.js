@@ -11,8 +11,8 @@ function App() {
       <ThemeMode />
       <Header />
       <Routes>
-        <Route path='/' element={<InputTabs />} />
-        <Route path='/result/:uuid' element={<Result />} />
+        <Route path='/ByteVidFrontend/' element={<InputTabs />} />
+        <Route path='/ByteVidFrontend/result/:uuid' element={<Result />} />
       </Routes>
     </div>
   );

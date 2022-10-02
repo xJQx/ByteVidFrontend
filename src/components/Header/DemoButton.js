@@ -17,10 +17,10 @@ const DemoButton = () => {
         localStorage.setItem('server', 'cloud');
 
         // // navigate to page
-        if (location.pathname.startsWith('/result/') && location.pathname !== `/result/85bbf493-58a9-40cd-8bf6-e71e28071d8f`) {
-            navigate(`result/85bbf493-58a9-40cd-8bf6-e71e28071d8f`);
+        if (location.pathname.startsWith('/ByteVidFrontend/result/') && location.pathname !== `/ByteVidFrontend/result/85bbf493-58a9-40cd-8bf6-e71e28071d8f`) {
+            navigate(`/ByteVidFrontend/result/85bbf493-58a9-40cd-8bf6-e71e28071d8f`);
             navigate(0); // refresh page to re-render
-        } else navigate(`result/85bbf493-58a9-40cd-8bf6-e71e28071d8f`);
+        } else navigate(`/ByteVidFrontend/result/85bbf493-58a9-40cd-8bf6-e71e28071d8f`);
     }
 
     return (

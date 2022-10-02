@@ -40,7 +40,7 @@ const UploadFileTab = ({ handleErrorMessage }) => {
         }); 
         const uuid = await res.text();
 
-        navigate(`result/${uuid}`);
+        navigate(`/ByteVidFrontend/result/${uuid}`);
     }
     const handleFileOnChange = (event) => {
         sendFormData = new FormData();

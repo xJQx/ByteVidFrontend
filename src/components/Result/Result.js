@@ -20,7 +20,7 @@ const Result = () => {
     // invalid uuid -> navigate back to homepage
     if (!isValidUuid(uuid)) {
       alert('Invalid uuid!');
-      navigate('/');
+      navigate('/ByteVidFrontend');
     }
 
     // get results (every sec)

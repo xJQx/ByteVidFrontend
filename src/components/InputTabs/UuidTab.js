@@ -32,7 +32,7 @@ const UuidTab = ({ handleErrorMessage }) => {
         else if (data.status === 500) return handleErrorMessage('Process failed.');
 
         // navigate to page
-        navigate(`result/${uuid}`);
+        navigate(`/ByteVidFrontend/result/${uuid}`);
     }
 
     return (

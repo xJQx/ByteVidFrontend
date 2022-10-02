@@ -44,7 +44,7 @@ const YoutubeLinkTab = ({ handleErrorMessage }) => {
         });
         const uuid = await res.text();
 
-        navigate(`result/${uuid}`);
+        navigate(`/ByteVidFrontend/result/${uuid}`);
     }
 
     return (
