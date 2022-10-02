@@ -47,7 +47,6 @@ const TabContainer = ({ currTab, setTab }) => {
   };
 
   const SmallTab = () => {
-    console.log(currTab);
     return (
       <div className='sm:hidden'>
         <label htmlFor='tabs' className='sr-only'>

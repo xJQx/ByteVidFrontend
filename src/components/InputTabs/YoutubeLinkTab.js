@@ -6,15 +6,16 @@ const YoutubeLinkTab = () => {
     const handleOnSubmit = (e) => {
         e.preventDefault();
 
-        let youtubeLink = e.target[0].value;
-        let language = e.target[1].value;
-        let databaseType = e.target[2].value;
+        let sendFormData = new FormData();
+        sendFormData.append('youtube-link', e.target[0].value);
+        sendFormData.append('language', e.target[1].value);
+        sendFormData.append('database-type', e.target[2].value);
     }
 
     return (
         <div className="p-4 bg-white rounded-lg md:p-8 dark:bg-gray-800" id="youtube-link-tab-content" role="tabpanel" aria-labelledby="youtube-link-tab-header">
             <form className="space-y-6" onSubmit={handleOnSubmit}>
-                <h5 className="text-xl font-medium text-gray-900 dark:text-white">Mine video with YouTube link</h5>
+                <h5 className="text-xl font-medium text-gray-900 dark:text-white">Extract with YouTube link</h5>
                 {/* YouTube Link */}
                 <div>
                     <label htmlFor="youtube-link-input" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">YouTube Link</label>

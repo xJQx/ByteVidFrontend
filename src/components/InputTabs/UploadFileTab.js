@@ -1,36 +1,25 @@
-import React, { useState } from 'react'
+import React from 'react'
 import DatabaseType from './DatabaseType';
 import Languages from './Languages';
 
 const UploadFileTab = () => {
-    const [base64String, setBase64String] = useState("");
+    let sendFormData = new FormData();
 
     const handleOnSubmit = (e) => {
         e.preventDefault();
-
-        let uploadedFile = e.target[0].value;
-        let language = e.target[1].value;
-        let databaseType = e.target[2].value;
         
-        console.log(base64String);
+        sendFormData.append('language', e.target[1].value);
+        sendFormData.append('database-type', e.target[2].value);
     }
     const handleFileOnChange = (event) => {
-        console.log(event.target.files[0]);
-        let reader = new FileReader();
-
-        reader.onloadend = () => {
-            alert('file uploaded!');
-            let result = reader.result; // base64 data
-            setBase64String(result);
-        };
-
-        reader.readAsDataURL(event.target.files[0]);
+        sendFormData = new FormData();
+        sendFormData.append('file', event.target.files[0]);
     }
 
     return (
         <div className="p-4 bg-white rounded-lg md:p-8 dark:bg-gray-800" id="upload-file-tab-content" role="tabpanel" aria-labelledby="upload-file-tab-header">
             <form className="space-y-6" onSubmit={handleOnSubmit}>
-                <h5 className="text-xl font-medium text-gray-900 dark:text-white">Mine video with file upload</h5>
+                <h5 className="text-xl font-medium text-gray-900 dark:text-white">Extract with file upload</h5>
                 {/* Upload File */}
                 <div id="upload-file-div">
                     <label htmlFor="upload-file-input" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">File</label>

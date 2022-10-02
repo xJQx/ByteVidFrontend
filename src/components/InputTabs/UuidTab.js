@@ -15,12 +15,17 @@ const UuidTab = () => {
         let databaseType = e.target[2].value;
 
         if (!isValidUuid(uuid)) return alert('Invalid uuid!');
+
+        let sendFormData = new FormData();
+        sendFormData.append('youtube-link', uuid);
+        sendFormData.append('language', language);
+        sendFormData.append('database-type', databaseType);
     }
 
     return (
         <div className="p-4 bg-white rounded-lg md:p-8 dark:bg-gray-800" id="use-uuid-tab-content" role="tabpanel" aria-labelledby="use-uuid-tab-header">
             <form className="space-y-6" onSubmit={handleOnSubmit}>
-                <h5 className="text-xl font-medium text-gray-900 dark:text-white">Mine video with UUID</h5>
+                <h5 className="text-xl font-medium text-gray-900 dark:text-white">Extract with UUID</h5>
                 {/* UUID */}
                 <div id="use-uuid-div">
                     <label htmlFor="use-uuid-input" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">UUID</label>
