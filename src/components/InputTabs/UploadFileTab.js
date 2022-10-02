@@ -1,16 +1,39 @@
-import React from 'react'
+import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom';
 import DatabaseType from './DatabaseType';
 import LanguageInput from './LanguageInput';
 import LanguageTranslated from './LanguageTranslated';
+import Spinner from '../Spinner/Spinner'
 
 const UploadFileTab = () => {
+    const navigate = useNavigate();
     let sendFormData = new FormData();
+    let [submitedBool, setSubmitedBool] = useState(false);
 
-    const handleOnSubmit = (e) => {
+    const handleOnSubmit = async (e) => {
         e.preventDefault();
+
+        if (!sendFormData.has('file')) return alert('Please upload video file!');
+        else setSubmitedBool(true);
+
+        let videoLanguage = e.target[1].value;
+        let translateLanguage = e.target[2].value;
+        let server = e.target[3].value;
+
         
-        sendFormData.append('language', e.target[1].value);
-        sendFormData.append('database-type', e.target[2].value);
+        sendFormData.append('type', 'upload');
+        sendFormData.append('videoLanguage', videoLanguage);
+        sendFormData.append('translateLanguage', translateLanguage);
+        sendFormData.append('server', server);
+
+        // ----- POST ----- //
+        const res = await fetch('http://127.0.0.1:5000/video', {
+            method: 'POST',
+            body: sendFormData,
+        }); 
+        const uuid = await res.text();
+
+        navigate(`result/${uuid}`);
     }
     const handleFileOnChange = (event) => {
         sendFormData = new FormData();
@@ -36,8 +59,13 @@ const UploadFileTab = () => {
 
                 {/* database */}
                 <DatabaseType />
-                
-                <button type="submit" className="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-yellow-500 dark:hover:bg-yellow-600 dark:focus:ring-yellow-700">Extract</button>
+                {submitedBool ?
+                    <>
+                        <button disabled type="submit" className="w-full text-white bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-yellow-600 dark:focus:ring-yellow-700">Extracting...</button>
+                        <Spinner completionStatusId={1} curStatusId={0} text='We are working hard on your video... 🏃🏻‍♀️🏃🏻‍♂️' />
+                    </>
+                    : <button type="submit" className="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-yellow-500 dark:hover:bg-yellow-600 dark:focus:ring-yellow-700">Extract</button>
+                }
             </form>
         </div>
     )

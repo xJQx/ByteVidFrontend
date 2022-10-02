@@ -1,4 +1,5 @@
 import React from 'react';
+import { Routes, Route } from 'react-router-dom';
 import Header from './components/Header/Header';
 import InputTabs from './components/InputTabs/InputTabs';
 import ThemeMode from './components/ThemeMode/ThemeMode';
@@ -9,8 +10,10 @@ function App() {
     <div className='lg:text-center bg-stone-100 dark:bg-slate-800'>
       <ThemeMode />
       <Header />
-      <InputTabs />
-      <Result />
+      <Routes>
+        <Route path='/' element={<InputTabs />} />
+        <Route path='/result/:uuid' element={<Result />} />
+      </Routes>
     </div>
   );
 }

@@ -1,14 +1,56 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { isValidUuid } from '../InputTabs/UuidTab';
+import Spinner from '../Spinner/Spinner';
+
+const STATUS_DONE = 200;
 
 const Result = () => {
+  const { uuid } = useParams();
+  const navigate = useNavigate();
+  let [resultData, setResultData] = useState({status: 0});
+  useEffect(() => {
+    // invalid uuid -> navigate back to homepage
+    if (!isValidUuid(uuid)) {
+      alert('Invalid uuid!');
+      navigate('/');
+    }
+
+    // get results (every sec)
+    if (resultData?.status === STATUS_DONE) return;
+
+    const getReqTimeout = setTimeout(() => {
+      fetch(`http://127.0.0.1:5000/result/${uuid}`, {
+        method: 'GET'
+      })
+        .then(res => res.json())
+        .then(data => {
+          setResultData(resultData => ({...resultData, ...data}));
+        });
+      console.log(resultData);
+    }, 1000);
+
+    // if done, stop making GET requests
+    if (resultData?.status === STATUS_DONE) clearTimeout(getReqTimeout);
+    
+  }, [uuid, navigate, resultData]);
+  
+  // ------------------------------------------------------------------------------------------------------------------ //
+
   const [tab, setTab] = useState('transcription');
 
   return (
     <div className='flex justify-center mt-10'>
-      <div className='max-w-2xl w-full bg-white rounded-t-lg border shadow-md dark:bg-gray-800 dark:border-gray-700 overflow-hidden'>
-        <TabContainer currTab={tab} setTab={setTab} />
-        <ContentContainer tab={tab} />
-      </div>
+      {resultData.status < 2 ? 
+        <div className='scale-150 p-10'>
+          <Spinner completionStatusId={2} curStatusId={resultData.status} text='We are working hard on your video... 🏃🏻‍♀️🏃🏻‍♂️' />
+        </div>
+        : (
+        <div className='max-w-2xl w-full bg-white rounded-t-lg border shadow-md dark:bg-gray-800 dark:border-gray-700 overflow-hidden'>
+          <TabContainer currTab={tab} setTab={setTab} />
+          <ContentContainer tab={tab} resultData={resultData} />
+        </div>
+      )}
     </div>
   );
 };
@@ -78,34 +120,23 @@ const TabContainer = ({ currTab, setTab }) => {
   );
 };
 
-const ContentContainer = ({ tab }) => {
-  const result = {
-    transcript: `[0100-0200] Lorem Ipsum is simply dummy text of the printing and typesetting industry.\n
-    [0200-0300] Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.\n
-    [0300-0400] It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.\n
-    [0400-0500] It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.`,
-    translation: `[0100-0200] 甲法乍成瓜學因它東燈找旁花彩右品。\n
-      [0200-0300] 三木問花聽燈行抄爸住開久結言點幼十「幸不象」把我巾立；像交夕再樹重風止。\n
-      [0300-0400] 生泉去聽畫「結耍知麻兒借過送」您位一且結雪包你放澡黑至耍干拍園朱姐問動，鳥澡布黑鳥一邊坡造媽星穴黑沒，黃洋尾愛！\n
-      [0400-0500] 記乍珠母音家。人蝶時知抱種言「品老村登月秋東雪」愛苦但蝶天姐前立「他坡現正干自拍助河」交只服黃們主住。第言兄父乙昔故`,
-    summary: {
-      text: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.',
-      image: '',
-    },
-    keywords: ['Lorem', 'Ipsum', 'dummy', 'typesetting'],
-  };
-
+const ContentContainer = ({ tab, resultData }) => {
   return (
     <div className='border-t border-gray-200 dark:border-gray-600 p-4'>
       <div className='block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300 text-left'>
         {tab === 'transcription' && (
-          <TranscriptionContent content={result.transcript} />
+          resultData.status < 2 ? <Spinner completionStatusId={2} curStatusId={resultData.status} text='Transcribing... ✍🏻' /> : <TranscriptionContent content={resultData.transcript} />
         )}
+
         {tab === 'translation' && (
-          <TranscriptionContent content={result.translation} />
+          resultData.status < 6 ? <Spinner completionStatusId={6} curStatusId={resultData.status} text='Translating... 📖' /> : <TranscriptionContent content={resultData.translated} />
         )}
-        {tab === 'keywords' && <Keywords keywords={result.keywords} />}
-        {tab === 'summary' && <Summary summary={result.summary} />}
+        {tab === 'keywords' && (
+          resultData.status < 4 ? <Spinner completionStatusId={4} curStatusId={resultData.status} text='Generating keywords...' /> : <Keywords keywords={resultData.keywords} />
+          )}
+        {tab === 'summary' && (
+          resultData.status < 7 ? <Spinner completionStatusId={7} curStatusId={resultData.status} text='Summarising... 🧾' /> : <Summary summaries={resultData.summaries} />
+          )}
       </div>
     </div>
   );
@@ -133,8 +164,31 @@ const Keywords = ({ keywords }) => {
   );
 };
 
-const Summary = ({ summary }) => {
-  return <div>{summary.text}</div>;
+const Summary = ({ summaries }) => {
+  const reader = new FileReader();
+  // let base64String;
+  // reader.addEventListener('load', () => {
+  //   base64String = reader.result;
+  // })
+  
+  return (summaries.map((s, index) => {
+    if (s.image) {
+      
+      // reader.readAsDataURL(s.image);
+    }
+
+    return (
+      <div key={index}>
+        {/* <img src={base64String} alt={index}></img> */}
+        <div>{s.text}</div>
+        <br />
+        <hr />
+        <br />
+      </div>
+    )
+  }));
+
 };
+
 
 export default Result;
