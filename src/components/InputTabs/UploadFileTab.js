@@ -1,6 +1,7 @@
 import React from 'react'
 import DatabaseType from './DatabaseType';
-import Languages from './Languages';
+import LanguageInput from './LanguageInput';
+import LanguageTranslated from './LanguageTranslated';
 
 const UploadFileTab = () => {
     let sendFormData = new FormData();
@@ -28,7 +29,10 @@ const UploadFileTab = () => {
 
                 
                 {/* language */}
-                <Languages />
+                <LanguageInput />
+
+                {/* Translation */}
+                <LanguageTranslated />
 
                 {/* database */}
                 <DatabaseType />

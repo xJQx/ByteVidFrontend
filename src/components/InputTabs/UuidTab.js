@@ -1,6 +1,7 @@
 import React from 'react'
 import DatabaseType from './DatabaseType';
-import Languages from './Languages';
+import LanguageInput from './LanguageInput';
+import LanguageTranslated from './LanguageTranslated';
 
 const UuidTab = () => {
     const isValidUuid = (s) => {
@@ -33,7 +34,10 @@ const UuidTab = () => {
                 </div>
 
                 {/* language */}
-                <Languages />
+                <LanguageInput />
+
+                {/* Translation */}
+                <LanguageTranslated />
 
                 {/* database */}
                 <DatabaseType />

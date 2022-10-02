@@ -1,15 +1,29 @@
 import React from 'react'
 import DatabaseType from './DatabaseType';
-import Languages from './Languages';
+import LanguageInput from './LanguageInput';
+import LanguageTranslated from './LanguageTranslated';
 
 const YoutubeLinkTab = () => {
+    const isValidYoutubeLink = (url) => {
+        const re = /^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?$/;
+        return url.match(re);
+        // returns null if not match
+        // else returns an array of matched characters
+    };
+
     const handleOnSubmit = (e) => {
         e.preventDefault();
 
+        let youtubeLink = e.target[0].value;
+        let language = e.target[1].value;
+        let databaseType = e.target[2].value;
+
+        if (!isValidYoutubeLink(youtubeLink)) return alert('Invalid YouTube link!');
+
         let sendFormData = new FormData();
-        sendFormData.append('youtube-link', e.target[0].value);
-        sendFormData.append('language', e.target[1].value);
-        sendFormData.append('database-type', e.target[2].value);
+        sendFormData.append('youtube-link', youtubeLink);
+        sendFormData.append('language', language);
+        sendFormData.append('database-type', databaseType);
     }
 
     return (
@@ -23,7 +37,10 @@ const YoutubeLinkTab = () => {
                 </div>
                 
                 {/* language */}
-                <Languages />
+                <LanguageInput />
+            
+                {/* Translation */}
+                <LanguageTranslated />
 
                 {/* database */}
                 <DatabaseType />
