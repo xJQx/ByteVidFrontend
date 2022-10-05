@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Alert from '../Alert/Alert';
 import { isValidUuid } from '../InputTabs/UuidTab';
@@ -16,18 +16,11 @@ const Result = () => {
   }
 
   let [resultData, setResultData] = useState({status: 0});
+  let fetchUrl = useRef("");
   useEffect(() => {
-    // invalid uuid -> navigate back to homepage
-    if (!isValidUuid(uuid)) {
-      alert('Invalid uuid!');
-      navigate('/ByteVidFrontend');
-    }
-
-    // get results (every sec)
-    const server = localStorage.getItem('server');
-    let fetchUrl = (server === 'cloud') ? `https://ayaka-apps.shn.hk/bytevid/result/${uuid}`: `http://127.0.0.1:5000/result/${uuid}`;
+    // get results (every 10 sec)
     const getReqTimeout = setTimeout(() => {
-      fetch(fetchUrl, {
+      fetch(fetchUrl.current, {
         method: 'GET'
       })
         .then(res => res.json())
@@ -35,8 +28,7 @@ const Result = () => {
           // setResultData
           setResultData(resultData => ({...resultData, ...data}));
         });
-      }, 1000);
-
+      }, 10000);
     // if done, stop making GET requests
     if (resultData?.status === STATUS_DONE) clearTimeout(getReqTimeout);
     // Error from server
@@ -45,7 +37,21 @@ const Result = () => {
       return setErrorMessage('Process failed.');
     }
     
-  }, [uuid, navigate, resultData]);
+  }, [resultData]);
+
+  useEffect(() => {
+    // invalid uuid -> navigate back to homepage
+    if (!isValidUuid(uuid)) {
+      alert('Invalid uuid!');
+      navigate('/ByteVidFrontend');
+    }
+
+    const server = localStorage.getItem('server');
+    fetchUrl.current = (server === 'cloud') ? `https://ayaka-apps.shn.hk/bytevid/result/${uuid}`: `http://127.0.0.1:5000/result/${uuid}`;
+
+    // reset status to 0 (to ensure re-rendering of results page when navigating between different uuids)
+    setResultData(r => ({...r, "status": 0}));
+  }, [uuid, navigate])
   
   // ------------------------------------------------------------------------------------------------------------------ //
 
@@ -54,7 +60,7 @@ const Result = () => {
   return (
     <>
       <div className='flex justify-center mt-10'>
-        {resultData.status == 500 ? 
+        {resultData.status === 500 ? 
           <div className="flex justify-center mt-10">
             <Alert color='rose' message={errorMessage} handleErrorMessage={handleErrorMessage} />
           </div> : 
@@ -63,7 +69,7 @@ const Result = () => {
               <Spinner completionStatusId={2} curStatusId={resultData.status} text='We are working hard on your video... 🏃🏻‍♀️🏃🏻‍♂️' />
             </div>
             : (
-            <div className='max-w-2xl w-full bg-white rounded-t-lg border shadow-md dark:bg-gray-800 dark:border-gray-700 overflow-hidden'>
+            <div className='mx-3 max-w-2xl w-full bg-white rounded-t-lg border shadow-md dark:bg-gray-800 dark:border-gray-700 overflow-hidden'>
               <TabContainer currTab={tab} setTab={setTab} />
               <ContentContainer tab={tab} resultData={resultData} />
             </div>
@@ -89,7 +95,7 @@ const TabContainer = ({ currTab, setTab }) => {
 
   const NormalTab = () => {
     return (
-      <div className='hidden text-sm font-medium text-center text-gray-500 rounded-lg divide-x divide-gray-200 sm:flex dark:divide-gray-600 dark:text-gray-400'>
+      <div className='text-sm font-medium text-center text-gray-500 rounded-lg divide-x divide-gray-200 sm:flex dark:divide-gray-600 dark:text-gray-400'>
         {tabs.map((tab) => (
           <button
             key={tab}
@@ -108,34 +114,34 @@ const TabContainer = ({ currTab, setTab }) => {
     );
   };
 
-  const SmallTab = () => {
-    return (
-      <div className='sm:hidden'>
-        <label htmlFor='tabs' className='sr-only'>
-          Select tab
-        </label>
-        <select
-          id='tabs'
-          className='bg-gray-50 border-0 border-b border-gray-200 text-gray-900 sm:text-sm rounded-t-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 cursor-pointer'
-        >
-          {tabs.map((tab) => {
-            return currTab === tab ? (
-              <option key={tab} selected />
-            ) : (
-              <option key={tab} onClick={() => setTab(tab.toLowerCase())}>
-                {tab}
-              </option>
-            );
-          })}
-        </select>
-      </div>
-    );
-  };
+  // const SmallTab = () => {
+  //   return (
+  //     <div className='sm:hidden'>
+  //       <label htmlFor='tabs' className='sr-only'>
+  //         Select tab
+  //       </label>
+  //       <select
+  //         id='tabs'
+  //         className='bg-gray-50 border-0 border-b border-gray-200 text-gray-900 sm:text-sm rounded-t-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 cursor-pointer'
+  //       >
+  //         {tabs.map((tab) => {
+  //           return currTab === tab ? (
+  //             <option key={tab} selected />
+  //           ) : (
+  //             <option key={tab} onClick={() => setTab(tab.toLowerCase())}>
+  //               {tab}
+  //             </option>
+  //           );
+  //         })}
+  //       </select>
+  //     </div>
+  //   );
+  // };
 
   return (
     <>
       <NormalTab />
-      <SmallTab />
+      {/* <SmallTab /> */}
     </>
   );
 };
@@ -161,8 +167,6 @@ const ContentContainer = ({ tab, resultData }) => {
     </div>
   );
 };
-
-const TranscriptionDisplay = () => {};
 
 const TranscriptionContent = ({ content }) => {
   return content?.split('\n').map((text) => (
